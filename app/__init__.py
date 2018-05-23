@@ -1,10 +1,7 @@
 from flask import Flask
-from flask_redis import Redis
 
-from app.models import db
+from app.models import db, data_store
 from app.v1.controller import v1_blueprint
-
-data_store = Redis()
 
 
 def create_app():

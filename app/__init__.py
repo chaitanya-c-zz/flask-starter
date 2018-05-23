@@ -1,16 +1,23 @@
-import redis
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from flask_redis import Redis
+
+from app.models import db
+from app.v1.controller import v1_blueprint
+
+data_store = Redis()
 
 
-app = Flask(__name__)
-app.config.from_object('config')
-db = SQLAlchemy(app)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object('config')
 
-data_store = redis.StrictRedis(
-    host=app.config.get('REDIS_HOST'), port=app.config.get('REDIS_PORT')
-)
+    # init DB
+    db.init_app(app)
 
-# Register FlaskView with the app and a base route
-from app.v1.controller.status_controller import StatusController
-StatusController.register(app, route_base='/api/v1')
+    # init redis
+    data_store.init_app(app)
+
+    # init v1 blueprint
+    app.register_blueprint(v1_blueprint, url_prefix='/api/v1')
+
+    return app

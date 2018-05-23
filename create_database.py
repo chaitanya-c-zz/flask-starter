@@ -2,8 +2,9 @@ import time
 
 from sqlalchemy import create_engine
 
-from app import app
+from app import create_app
 
+app = create_app()
 db_name = app.config.get('DB_NAME')
 user = app.config.get('DB_USER')
 password = app.config.get('DB_PASSWORD')
